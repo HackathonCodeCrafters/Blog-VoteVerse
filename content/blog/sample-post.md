@@ -29,9 +29,12 @@ console.log("Hello from markdown!");
 
 ## Getting Started
 
-1. Create a `.md` file in `content/blog/`
+1. Create a markdown file in content/blog/
 2. Add frontmatter at the top
 3. Write your content in markdown
 4. The system will automatically generate the page
 
 That's it! Your blog system is ready to use.
+\`\`\`
+
+Sekarang mari kita update blog data untuk menghindari konflik dan memastikan content yang clean:

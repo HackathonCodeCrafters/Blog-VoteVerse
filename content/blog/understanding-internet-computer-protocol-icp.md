@@ -16,7 +16,7 @@ tags:
     "SmartContract",
     "DecentralizedApps",
   ]
-image: "/placeholder.svg?height=400&width=800"
+image: "/public/motoko-code.jpeg"
 featured: true
 ---
 

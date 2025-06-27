@@ -3,7 +3,6 @@
 import type { BlogPost } from "@/types/blog";
 import fs from "fs";
 import matter from "gray-matter";
-import { serialize } from "next-mdx-remote/serialize";
 import path from "path";
 
 // Fallback posts yang akan selalu ada
@@ -34,26 +33,12 @@ const fallbackPosts: BlogPost[] = [
   },
   {
     id: 2,
-    slug: "sample-post",
-    title: "Sample Blog Post",
-    excerpt: "This is a sample blog post to test the markdown system.",
-    content: null,
-    author: "Blog Author",
-    date: "2025-01-07", // Changed date to be older
-    readTime: "5 min read",
-    category: "Technology",
-    tags: ["Sample", "Test", "Markdown"],
-    image: "/placeholder.svg?height=400&width=800",
-    featured: false, // Changed to false so ICP is featured
-  },
-  {
-    id: 3,
     slug: "how-to-create-your-first-proposal-on-voteverse",
     title: "How to Create Your First Proposal on VoteVerse",
     excerpt: "A step-by-step guide to creating effective proposals.",
     content: null,
     author: "Sarah Chen",
-    date: "2025-01-06", // Changed date to be older
+    date: "2025-01-06",
     readTime: "5 min read",
     category: "Tutorial",
     tags: ["Guide", "Proposals", "Getting Started"],
@@ -64,22 +49,23 @@ const fallbackPosts: BlogPost[] = [
 
 const contentDirectory = path.join(process.cwd(), "content/blog");
 
-async function serializeFallbackContent(slug: string): Promise<unknown> {
+function getFallbackContent(slug: string): string {
   const contentMap: { [key: string]: string } = {
-    "understanding-internet-computer-protocol-icp": `# 🚀 Understanding Internet Computer Protocol (ICP): The Future of Decentralized Internet
+    "understanding-internet-computer-protocol-icp": `# Understanding Internet Computer Protocol (ICP)
 
 ## What is ICP?
 
-Internet Computer Protocol (ICP) is a revolutionary blockchain project developed by the DFINITY Foundation. Its main goal is to extend the functionality of the public internet so it can become a global platform where developers can build backend software and applications without requiring traditional servers or centralized cloud services like AWS or Google Cloud.
+Internet Computer Protocol (ICP) is a revolutionary blockchain project developed by the DFINITY Foundation. Its main goal is to extend the functionality of the public internet so it can become a global platform where developers can build backend software and applications without requiring traditional servers.
 
-## 🔍 Key Features of ICP
+## Key Features of ICP
 
 ### Smart Contract Canisters
 
 ICP introduces the concept of **canisters**, which are a form of smart contract capable of running complex logic and storing data directly.
 
+Here is a simple example of a Motoko canister:
+
 \`\`\`motoko
-// Example: Simple blog canister in Motoko
 import Time "mo:base/Time";
 import Array "mo:base/Array";
 
@@ -122,9 +108,11 @@ actor BlogCanister {
 - **Finality**: 1-2 seconds
 - **Throughput**: 11,500+ queries per second  
 - **Storage**: Unlimited on-chain storage
-- **Cost**: ~$5 per GB per year
+- **Cost**: Around 5 dollars per GB per year
 
-## 🛠️ Getting Started with ICP
+## Getting Started with ICP
+
+To get started with ICP development, follow these steps:
 
 \`\`\`bash
 # Install DFX SDK
@@ -139,35 +127,12 @@ dfx start --background
 dfx deploy
 \`\`\`
 
-## 🌍 Future Vision
+## Future Vision
 
-ICP aims to return the internet to its roots: **free, open, and without centralized intermediaries**. With a more holistic Web3 architecture, ICP drives the transition towards a new generation internet that's 100% managed by the community.
+ICP aims to return the internet to its roots: **free, open, and without centralized intermediaries**. With a more holistic Web3 architecture, ICP drives the transition towards a new generation internet that is 100% managed by the community.
 
 Ready to build the future of the internet? Start with ICP today!`,
-    "sample-post": `# Sample Blog Post
 
-This is a sample blog post written in Markdown.
-
-## Features
-
-- **Markdown support**: Write content in simple markdown
-- **Frontmatter**: Metadata at the top of each file
-- **Code blocks**: Syntax highlighting included
-
-\`\`\`javascript
-function hello() {
-  console.log("Hello from markdown!");
-}
-\`\`\`
-
-## Getting Started
-
-1. Create a \`.md\` file in \`content/blog/\`
-2. Add frontmatter at the top
-3. Write your content in markdown
-4. The system will automatically generate the page
-
-That's it! Your blog system is ready to use.`,
     "how-to-create-your-first-proposal-on-voteverse": `# How to Create Your First Proposal on VoteVerse
 
 Creating effective proposals is key to successful governance.
@@ -189,8 +154,7 @@ Creating effective proposals is key to successful governance.
 Start small and build your reputation in the community!`,
   };
 
-  const content = contentMap[slug] || `# ${slug}\n\nContent coming soon...`;
-  return await serialize(content);
+  return contentMap[slug] || `# ${slug}\n\nContent coming soon...`;
 }
 
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {
@@ -200,16 +164,25 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
       const filePath = path.join(contentDirectory, `${slug}.md`);
 
       if (fs.existsSync(filePath)) {
+        console.log(`Reading markdown file: ${filePath}`);
         const fileContents = fs.readFileSync(filePath, "utf8");
         const { data, content } = matter(fileContents);
-        const mdxSource = await serialize(content);
+
+        // Clean content untuk menghindari parsing issues
+        const cleanContent = content
+          .replace(/\\`\\`\\`/g, "```") // Fix escaped backticks
+          .replace(/\\\./g, ".") // Fix escaped dots
+          .trim();
+
+        console.log(`Parsed frontmatter for ${slug}:`, data);
+        console.log(`Content preview:`, cleanContent.substring(0, 200));
 
         return {
           id: Number(data.id) || 1,
           slug,
           title: data.title,
           excerpt: data.excerpt,
-          content: mdxSource,
+          content: cleanContent, // Use cleaned content
           author: data.author,
           date: data.date,
           readTime: data.readTime,
@@ -224,8 +197,9 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
     // Fallback ke data default
     const fallbackPost = fallbackPosts.find((post) => post.slug === slug);
     if (fallbackPost) {
-      const mdxSource = await serializeFallbackContent(slug);
-      return { ...fallbackPost, content: mdxSource };
+      const content = getFallbackContent(slug);
+      console.log(`Using fallback content for: ${slug}`);
+      return { ...fallbackPost, content };
     }
 
     return null;
@@ -235,8 +209,8 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
     // Fallback jika ada error
     const fallbackPost = fallbackPosts.find((post) => post.slug === slug);
     if (fallbackPost) {
-      const mdxSource = await serializeFallbackContent(slug);
-      return { ...fallbackPost, content: mdxSource };
+      const content = getFallbackContent(slug);
+      return { ...fallbackPost, content };
     }
 
     return null;
@@ -255,13 +229,19 @@ export async function getAllBlogSlugs(): Promise<string[]> {
       const files = fs.readdirSync(contentDirectory);
       files
         .filter((file) => file.endsWith(".md"))
-        .forEach((file) => slugs.add(file.replace(/\.md$/, "")));
+        .forEach((file) => {
+          const slug = file.replace(/\.md$/, "");
+          slugs.add(slug);
+          console.log(`Found markdown file: ${slug}`);
+        });
     }
   } catch (error) {
     console.error("Error reading blog directory:", error);
   }
 
-  return Array.from(slugs);
+  const slugArray = Array.from(slugs);
+  console.log("All blog slugs:", slugArray);
+  return slugArray;
 }
 
 export async function getAllBlogPosts(): Promise<BlogPost[]> {
@@ -280,14 +260,10 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
   } catch (error) {
     console.error("Error getting all blog posts:", error);
 
-    // Return fallback posts dengan serialized content
-    const postsWithContent = await Promise.all(
-      fallbackPosts.map(async (post) => {
-        const mdxSource = await serializeFallbackContent(post.slug);
-        return { ...post, content: mdxSource };
-      })
-    );
-
-    return postsWithContent;
+    // Return fallback posts dengan content
+    return fallbackPosts.map((post) => ({
+      ...post,
+      content: getFallbackContent(post.slug),
+    }));
   }
 }

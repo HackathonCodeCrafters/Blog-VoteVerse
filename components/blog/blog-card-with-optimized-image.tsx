@@ -3,7 +3,7 @@
 import { useDarkMode } from "@/context/DarkModeContext";
 import { Calendar, Clock, Heart, Share2, User } from "lucide-react";
 import Link from "next/link";
-import BlogImage from "./blog-image";
+import OptimizedImage from "./optimized-image";
 
 interface Post {
   id: number;
@@ -49,12 +49,12 @@ export default function BlogCard({ post }: BlogCardProps) {
         }`}
       >
         <div className="relative h-48">
-          <BlogImage
+          <OptimizedImage
             src={post.image || "/placeholder.svg?height=192&width=384"}
             alt={post.title}
             width={384}
             height={192}
-            className="w-full h-full rounded-t-2xl"
+            className="w-full h-full"
           />
           <div className="absolute top-4 left-4">
             <span

@@ -3,6 +3,7 @@
 import { useDarkMode } from "@/context/DarkModeContext";
 import { ArrowRight, Calendar, Clock, User } from "lucide-react";
 import Link from "next/link";
+import BlogImage from "./blog-image";
 
 interface Post {
   id: number;
@@ -59,10 +60,12 @@ export default function FeaturedPost({ post }: FeaturedPostProps) {
         >
           <div className="grid grid-cols-1 lg:grid-cols-2">
             <div className="relative h-64 lg:h-auto">
-              <img
-                src={post.image || "/placeholder.svg"}
+              <BlogImage
+                src={post.image || "/placeholder.svg?height=400&width=600"}
                 alt={post.title}
-                className="w-full h-full object-cover"
+                width={600}
+                height={400}
+                className="w-full h-full"
               />
               <div className="absolute top-4 left-4">
                 <span

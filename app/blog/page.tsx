@@ -3,6 +3,7 @@
 import BlogGrid from "@/components/blog/blog-grid";
 import BlogHero from "@/components/blog/blog-hero";
 import CategoryFilter from "@/components/blog/category-filter";
+import DarkModeToggle from "@/components/blog/dark-mode-toggle";
 import FeaturedPost from "@/components/blog/featured-post";
 import NewsletterSignup from "@/components/blog/newsletter-signup";
 import NoResults from "@/components/blog/no-result";
@@ -11,7 +12,6 @@ import { getAllBlogPosts } from "@/lib/blog-data";
 import type { BlogPost } from "@/types/blog";
 import { useEffect, useState } from "react";
 
-// Remove the static categories array and create it dynamically
 const BlogPage = () => {
   const { darkMode } = useDarkMode();
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -79,7 +79,7 @@ const BlogPage = () => {
     setSelectedCategory(category);
   };
 
-  // Add this useEffect to update category counts
+  // Update category counts
   useEffect(() => {
     if (posts.length > 0) {
       const categoryCounts = posts.reduce((acc, post) => {
@@ -116,18 +116,17 @@ const BlogPage = () => {
     }
   }, [posts]);
 
-  // Add this function inside the component
   const handleClearFilters = () => {
     setSearchQuery("");
     setSelectedCategory("All");
   };
 
-  // Rest of the component remains the same, but use filteredPosts instead of posts
   if (loading) {
     return (
       <div
         className={`min-h-screen ${darkMode ? "bg-gray-900" : "bg-gray-50"}`}
       >
+        <DarkModeToggle />
         <BlogHero onSearch={handleSearch} />
         <div className="flex items-center justify-center py-20">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
@@ -141,6 +140,7 @@ const BlogPage = () => {
       <div
         className={`min-h-screen ${darkMode ? "bg-gray-900" : "bg-gray-50"}`}
       >
+        <DarkModeToggle />
         <BlogHero onSearch={handleSearch} />
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
@@ -165,9 +165,9 @@ const BlogPage = () => {
     .filter((post) => !post.featured)
     .slice(0, 6);
 
-  // Update the return statement to show NoResults when no posts found
   return (
     <div className={`min-h-screen ${darkMode ? "bg-gray-900" : "bg-gray-50"}`}>
+      <DarkModeToggle />
       <BlogHero onSearch={handleSearch} />
       <CategoryFilter
         categories={categories}

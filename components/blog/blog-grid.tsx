@@ -14,6 +14,7 @@ interface Post {
   category: string;
   tags: string[];
   image: string;
+  slug: string;
 }
 
 interface BlogGridProps {

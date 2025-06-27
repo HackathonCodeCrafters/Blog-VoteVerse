@@ -1,13 +1,7 @@
-import BlogPostContent from "@/components/blog/blog-post-context";
+import BlogPostContent from "@/components/blog/blog-post-content";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blog-data";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-
-interface BlogPostPageProps {
-  params: {
-    slug: string;
-  };
-}
 
 export async function generateStaticParams() {
   const slugs = await getAllBlogSlugs();
@@ -18,8 +12,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
   params,
-}: BlogPostPageProps): Promise<Metadata> {
-  const post = await getBlogPost(params.slug);
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
   if (!post) {
     return {
@@ -46,8 +43,13 @@ export async function generateMetadata({
   };
 }
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getBlogPost(params.slug);
+export default async function BlogPostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
   if (!post) {
     notFound();
