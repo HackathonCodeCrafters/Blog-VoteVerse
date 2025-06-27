@@ -1,28 +1,32 @@
 # VoteVerse Blog System
 
-A modern, full-stack blog system built with Next.js 14, TypeScript, and Tailwind CSS. Features MDX support for rich content, syntax highlighting, and interactive components.
+A modern, full-stack blog system built with Next.js 15, TypeScript, and Tailwind CSS. Features MDX support for rich content, dark/light mode, social sharing, and interactive components.
 
-## Features
+## ✨ Features
 
-- 🚀 **Next.js 14** with App Router
+- 🚀 **Next.js 15** with App Router
 - 📝 **MDX Support** for rich content with React components
 - 🎨 **Tailwind CSS** for styling
-- 🌙 **Dark Mode** support
+- 🌙 **Dark/Light Mode** toggle with persistent state
 - 💻 **Syntax Highlighting** with copy functionality
-- 📱 **Responsive Design**
+- 📱 **Responsive Design** for all devices
+- 🔍 **Search & Filter** functionality
+- 📊 **Social Sharing** (Twitter, Facebook, LinkedIn)
+- ❤️ **Interactive Features** (Like, Bookmark, Share)
 - 🔍 **SEO Optimized** with metadata generation
 - ⚡ **Performance Optimized** with static generation
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- **Framework**: Next.js 14
+- **Framework**: Next.js 15
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Content**: MDX with next-mdx-remote
 - **Icons**: Lucide React
-- **Syntax Highlighting**: react-syntax-highlighter
+- **State Management**: React Context
+- **Deployment**: Vercel Ready
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -31,188 +35,197 @@ A modern, full-stack blog system built with Next.js 14, TypeScript, and Tailwind
 
 ### Installation
 
-1. Clone the repository:
-   \`\`\`bash
-   git clone <repository-url>
-   cd voteverse-blog
-   \`\`\`
+```bash
+git clone <repository-url>
+cd voteverse-blog
 
-2. Install dependencies:
-   \`\`\`bash
-   npm install
+# Install dependencies
+npm install # or yarn install
 
-# or
+# Run development server
+npm run dev # or yarn dev
 
-yarn install
-\`\`\`
+# Visit
+http://localhost:3000
+```
 
-3. Run the development server:
-   \`\`\`bash
-   npm run dev
+## 📁 Project Structure
 
-# or
-
-yarn dev
-\`\`\`
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Project Structure
-
-\`\`\`
+```
 ├── app/
-│ ├── blog/
-│ │ ├── [slug]/
-│ │ │ └── page.tsx # Dynamic blog post pages
-│ │ └── page.tsx # Blog listing page
-│ ├── layout.tsx # Root layout
-│ └── page.tsx # Home page (redirects to blog)
+│   ├── blog/
+│   │   ├── [slug]/              # Dynamic routes untuk individual blog posts
+│   │   │   ├── page.tsx         # Blog post detail page (/blog/my-post-slug)
+│   │   │   └── not-found.tsx    # 404 page untuk blog post yang tidak ditemukan
+│   │   └── page.tsx             # Blog listing page (/blog)
+│   ├── layout.tsx               # Root layout dengan metadata & providers
+│   ├── page.tsx                 # Home page (redirect ke /blog)
+│   └── globals.css              # Global styles & prose styling untuk MDX
+│
 ├── components/
-│ └── blog/
-│ ├── blog-card.tsx # Individual blog post card
-│ ├── blog-grid.tsx # Blog posts grid
-│ ├── blog-hero.tsx # Hero section
-│ ├── blog-post-content.tsx # Blog post detail page
-│ ├── category-filter.tsx # Category filtering
-│ ├── code-block.tsx # Syntax highlighted code blocks
-│ ├── featured-post.tsx # Featured post component
-│ ├── installation-guide.tsx # Installation guide component
-│ ├── newsletter-signup.tsx # Newsletter signup
-│ └── technical-note.tsx # Technical note component
+│   └── blog/
+│       ├── layout/                      # Core layout components
+│       │   ├── blog-hero.tsx           # Hero section dengan search bar
+│       │   ├── blog-grid.tsx           # Grid layout untuk multiple blog cards
+│       │   ├── featured-post.tsx       # Large featured post display
+│       │   └── newsletter-signup.tsx   # Newsletter subscription section
+│       ├── display/                    # Blog post display components
+│       │   ├── blog-card.tsx                      # Individual blog post card
+│       │   ├── blog-card-with-optimized-image.tsx # Blog card dengan image optimization
+│       │   ├── blog-post-content.tsx              # Main blog post content renderer
+│       │   ├── blog-post-header.tsx               # Post header (title, meta, social)
+│       │   ├── blog-post-wrapper.tsx              # Client wrapper untuk blog posts
+│       │   └── blog-content-area.tsx              # Content area dengan prose styling
+│       ├── images/                      # Image handling
+│       │   ├── blog-image.tsx          # Custom image component untuk blog
+│       │   └── optimized-image.tsx     # Next.js Image vs regular img handling
+│       ├── filter/                      # Search & filter
+│       │   ├── category-filter.tsx     # Category filter buttons
+│       │   ├── no-result.tsx           # No search results state
+│       │   └── empty-state.tsx         # No blog posts state
+│       ├── code/                        # Code & technical
+│       │   ├── code-block.tsx          # Syntax highlighted code blocks
+│       │   ├── copy-button.tsx         # Copy code functionality
+│       │   ├── technical-note.tsx      # Info/warning/success/error notes
+│       │   └── installation-guide.tsx  # Step-by-step installation guides
+│       ├── ui/                          # UI & interaction
+│       │   ├── dark-mode-toggle.tsx    # Dark/light mode toggle button
+│       │   └── social-share.tsx        # Like, bookmark, share functionality
+│       └── wrapper/
+│           └── dark-mode-wrapper.tsx   # Dark mode context wrapper
+│
 ├── context/
-│ └── DarkModeContext.tsx # Dark mode context
+│   └── DarkModeContext.tsx             # Global dark mode state dengan localStorage
+│
 ├── lib/
-│ └── blog-data.ts # Blog data management
+│   ├── blog-data.ts                    # Main blog data functions (clean, no fallbacks)
+│   └── blog-utils.ts                   # Utility functions for blog operations
+│
 ├── types/
-│ └── blog.ts # TypeScript interfaces
-└── README.md
-\`\`\`
+│   └── blog.ts                         # BlogPost interface & type definitions
+│
+├── content/
+│   └── blog/
+│       └── understanding-internet-computer-protocol-icp.md # ICP tutorial
+│
+├── scripts/
+│   └── create-content-dir.js           # Script untuk create content directory
+│
+└── package.json
+```
 
-## Content Management
+## 📝 Content Management
 
 ### Adding New Blog Posts
 
-1. Add your blog post data to \`lib/blog-data.ts\`:
+#### Markdown (Recommended)
 
-\`\`\`typescript
-const newPost: BlogPost = {
-id: 2,
-slug: "your-post-slug",
-title: "Your Post Title",
-excerpt: "Brief description...",
-content: \`# Your MDX Content Here
+Create a `.md` file in `content/blog/`:
 
-  <TechnicalNote type="info">
-  This is a technical note component.
-  </TechnicalNote>
-  
-  \\\`\\\`\\\`javascript
-  console.log("Code with syntax highlighting");
-  \\\`\\\`\\\`
-  \`,
+````markdown
+id: 3
+title: "Your Amazing Blog Post"
+excerpt: "A brief description of your post"
+author: "Your Name"
+date: "2025-01-08"
+readTime: "5 min read"
+category: "Technology"
+tags: ["React", "Next.js", "Tutorial"]
+image: "/placeholder.svg?height=400&width=800"
+featured: false
+
+---
+
+# Your Amazing Blog Post
+
+Your content goes here with full **Markdown** support!
+
+```javascript
+const example = "Code blocks work too!";
+console.log(example);
+```
+````
+
+````
+
+#### Programmatic Fallback
+
+Add to `lib/blog-data.ts` fallbackPosts:
+
+```ts
+{
+  id: 3,
+  slug: "your-post-slug",
+  title: "Your Post Title",
+  excerpt: "Brief description...",
+  content: null,
   author: "Author Name",
   date: "2025-01-08",
   readTime: "10 min read",
   category: "Technology",
   tags: ["tag1", "tag2"],
-  image: "/path/to/image.jpg",
+  image: "/placeholder.svg?height=400&width=800",
+  featured: false,
 }
-\`\`\`
+````
 
-### MDX Components
+### Categories
 
-The blog supports several custom MDX components:
+- **Technology**
+- **Tutorial**
+- **Community**
+- **Security**
+- **Vision**
+- **Economics**
 
-#### TechnicalNote
+## 🎨 Customization
 
-\`\`\`mdx
-<TechnicalNote type="info|warning|success|error" title="Optional Title">
-Your note content here
-</TechnicalNote>
-\`\`\`
+### Dark Mode
 
-#### InstallationGuide
+Handled by:
 
-\`\`\`mdx
-<InstallationGuide
-title="Setup Guide"
-steps={[
-{
-title: "Step 1",
-description: "Description",
-code: "npm install",
-language: "bash"
-}
-]}
-/>
-\`\`\`
+- `DarkModeContext.tsx`
+- `globals.css`
+- Tailwind `dark:` classes
 
-#### Code Blocks
+## 🔧 Key Files
 
-\`\`\`mdx
-\\\`\\\`\\\`javascript
-const example = "Syntax highlighted code";
-console.log(example);
-\\\`\\\`\\\`
-\`\`\`
+- `layout.tsx` - Root layout
+- `blog-data.ts` - Blog post source
+- `blog-post-content.tsx` - Full post display
+- `category-filter.tsx` - Filtering logic
 
-## Customization
+## 🔍 SEO Features
 
-### Styling
+- Metadata generation
+- Open Graph & Twitter Card
+- Structured article data
 
-- Modify \`tailwind.config.ts\` for theme customization
-- Update component styles in individual component files
-- Dark mode styles are handled automatically
+## 🔧 Troubleshooting
 
-### Adding New Components
+- Check MDX syntax
+- Ensure `content/blog/` exists
+- Wrap app in `DarkModeProvider`
+- Use valid placeholder images
 
-1. Create component in \`components/blog/\`
-2. Add to MDX components in \`blog-post-content.tsx\`
-3. Use in your MDX content
+## 🤝 Contributing
 
-### Categories and Tags
+1. Fork
+2. Create branch
+3. Commit
+4. Push
+5. PR
 
-- Update category colors in \`getCategoryColor\` functions
-- Add new categories to the categories array
-- Tags are automatically generated from post data
+## 📄 License
 
-## Deployment
+MIT
 
-### Vercel (Recommended)
+## 🆘 Support
 
-1. Push to GitHub
-2. Connect to Vercel
-3. Deploy automatically
+- Check README
+- Review console logs
+- Create GitHub issue
 
-### Other Platforms
+---
 
-\`\`\`bash
-npm run build
-npm start
-\`\`\`
-
-## Performance
-
-- Static generation for blog posts
-- Image optimization with Next.js Image component
-- Code splitting and lazy loading
-- Optimized bundle size
-
-## SEO
-
-- Automatic metadata generation
-- Open Graph tags
-- Twitter Card support
-- Structured data for articles
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## License
-
-MIT License - see LICENSE file for details.
-
+Built with ❤️ using Next.js, TypeScript, and Tailwind CSS

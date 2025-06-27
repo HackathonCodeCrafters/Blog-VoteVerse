@@ -2,8 +2,8 @@
 id: 1
 title: "🚀 Understanding Internet Computer Protocol (ICP): The Future of Decentralized Internet"
 excerpt: "Explore how ICP is revolutionizing web development by enabling fully on-chain applications without traditional cloud infrastructure, complete with technical examples and implementation guides."
-author: "Alex Rodriguez"
-date: "2025-01-08"
+author: "Adam Abdillah"
+date: "2025-27-06"
 readTime: "15 min read"
 category: "Technology"
 tags:
@@ -16,7 +16,7 @@ tags:
     "SmartContract",
     "DecentralizedApps",
   ]
-image: "/public/motoko-code.jpeg"
+image: "/blog/internet-computer-protocol.png"
 featured: true
 ---
 

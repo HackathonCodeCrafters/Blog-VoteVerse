@@ -4,6 +4,7 @@ import BlogGrid from "@/components/blog/blog-grid";
 import BlogHero from "@/components/blog/blog-hero";
 import CategoryFilter from "@/components/blog/category-filter";
 import DarkModeToggle from "@/components/blog/dark-mode-toggle";
+import EmptyState from "@/components/blog/empty-state";
 import FeaturedPost from "@/components/blog/featured-post";
 import NewsletterSignup from "@/components/blog/newsletter-signup";
 import NoResults from "@/components/blog/no-result";
@@ -159,6 +160,20 @@ const BlogPage = () => {
     );
   }
 
+  // If no posts at all, show empty state
+  if (posts.length === 0) {
+    return (
+      <div
+        className={`min-h-screen ${darkMode ? "bg-gray-900" : "bg-gray-50"}`}
+      >
+        <DarkModeToggle />
+        <BlogHero onSearch={handleSearch} />
+        <EmptyState />
+        <NewsletterSignup />
+      </div>
+    );
+  }
+
   const featuredPost =
     filteredPosts.find((post) => post.featured) || filteredPosts[0];
   const regularPosts = filteredPosts
@@ -177,13 +192,14 @@ const BlogPage = () => {
       {featuredPost && <FeaturedPost post={featuredPost} />}
       {regularPosts.length > 0 ? (
         <BlogGrid posts={regularPosts} />
-      ) : (
+      ) : filteredPosts.length === 0 &&
+        (searchQuery || selectedCategory !== "All") ? (
         <NoResults
           searchQuery={searchQuery}
           selectedCategory={selectedCategory}
           onClearFilters={handleClearFilters}
         />
-      )}
+      ) : null}
       <NewsletterSignup />
     </div>
   );

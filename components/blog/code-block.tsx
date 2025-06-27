@@ -1,3 +1,6 @@
+"use client";
+
+import { useDarkMode } from "@/context/DarkModeContext";
 import type React from "react";
 import CopyButton from "./copy-button";
 
@@ -7,6 +10,7 @@ interface CodeBlockProps {
 }
 
 export default function CodeBlock({ children, className }: CodeBlockProps) {
+  const { darkMode } = useDarkMode();
   const code = String(children).replace(/\n$/, "");
   const language = className?.replace(/language-/, "") || "text";
 
@@ -16,15 +20,23 @@ export default function CodeBlock({ children, className }: CodeBlockProps) {
 
       {/* Language label */}
       {language !== "text" && (
-        <div className="absolute top-4 left-4 px-2 py-1 rounded text-xs font-medium bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+        <div
+          className={`absolute top-3 left-4 px-2 py-1 rounded text-xs font-medium z-10 ${
+            darkMode ? "bg-gray-700 text-gray-300" : "bg-gray-200 text-gray-700"
+          }`}
+        >
           {language}
         </div>
       )}
 
-      <pre className="p-4 pt-12 rounded-lg overflow-x-auto text-sm bg-gray-100 text-gray-800 border border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700">
-        <code className={className} style={{ color: "inherit" }}>
-          {children}
-        </code>
+      <pre
+        className={`p-4 pt-10 rounded-lg overflow-x-auto text-sm border ${
+          darkMode
+            ? "bg-gray-900 text-gray-100 border-gray-700"
+            : "bg-gray-50 text-gray-800 border-gray-200"
+        }`}
+      >
+        <code className={className}>{children}</code>
       </pre>
     </div>
   );
