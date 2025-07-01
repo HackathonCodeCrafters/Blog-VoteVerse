@@ -3,17 +3,26 @@ import { getAllBlogSlugs, getBlogPost } from "@/lib/blog-data";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+// ✅ Updated type for Next.js 15 - params is now a Promise
+type PageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+// ✅ Updated generateStaticParams - no changes needed here
 export async function generateStaticParams() {
   const slugs = await getAllBlogSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
+// ✅ Updated generateMetadata - await params
 export async function generateMetadata({
   params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  const post = await getBlogPost(params.slug);
+}: PageProps): Promise<Metadata> {
+  // Await params since it's now a Promise in Next.js 15
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
   if (!post) {
     return {
@@ -21,8 +30,8 @@ export async function generateMetadata({
     };
   }
 
-  const baseUrl = "https://blog-voteverse.netlify.app/blog"; // Ganti dengan domain kamu
-  const fullUrl = `${baseUrl}/blog/${params.slug}`;
+  const baseUrl = "https://blog-voteverse.netlify.app/blog"; // Domain kamu
+  const fullUrl = `${baseUrl}/${slug}`;
   const imageUrl = `${baseUrl}${post.image}`;
 
   return {
@@ -52,14 +61,15 @@ export async function generateMetadata({
   };
 }
 
-export default async function BlogPostPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const post = await getBlogPost(params.slug);
+// ✅ Updated page component - await params
+export default async function BlogPostPage({ params }: PageProps) {
+  // Await params since it's now a Promise in Next.js 15
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
-  if (!post) notFound();
+  if (!post) {
+    notFound();
+  }
 
   return <BlogPostContent post={post} />;
 }
