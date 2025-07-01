@@ -32,7 +32,7 @@ export async function generateMetadata({
 
   const baseUrl = "https://blog-voteverse.netlify.app/blog"; // Domain kamu
   const fullUrl = `${baseUrl}/${slug}`;
-  const imageUrl = `${baseUrl}${post.image}`;
+  const imageUrl = `${baseUrl}/voteverselogo.png`;
 
   return {
     title: `${post.title} | VoteVerse Blog`,

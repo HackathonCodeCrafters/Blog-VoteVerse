@@ -33,9 +33,9 @@ const BlogPage = () => {
   useEffect(() => {
     async function loadPosts() {
       try {
-        console.log("Loading blog posts...");
+        // console.log("Loading blog posts...");
         const allPosts = await getAllBlogPosts();
-        console.log("Loaded posts:", allPosts);
+        // console.log("Loaded posts:", allPosts);
         setPosts(allPosts);
         setFilteredPosts(allPosts);
       } catch (err) {

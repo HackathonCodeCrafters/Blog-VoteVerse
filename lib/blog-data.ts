@@ -10,17 +10,17 @@ const contentDirectory = path.join(process.cwd(), "content/blog");
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {
   try {
     if (!fs.existsSync(contentDirectory)) {
-      console.log("Content directory not found");
+      // console.log("Content directory not found");
       return null;
     }
 
     const filePath = path.join(contentDirectory, `${slug}.md`);
     if (!fs.existsSync(filePath)) {
-      console.log(`File ${slug}.md not found`);
+      // console.log(`File ${slug}.md not found`);
       return null;
     }
 
-    console.log(`Reading markdown file: ${filePath}`);
+    // console.log(`Reading markdown file: ${filePath}`);
     const fileContents = fs.readFileSync(filePath, "utf8");
     const { data, content } = matter(fileContents);
 
@@ -30,7 +30,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
       .replace(/\\\./g, ".") // Fix escaped dots
       .trim();
 
-    console.log(`Parsed frontmatter for ${slug}:`, data);
+    // console.log(`Parsed frontmatter for ${slug}:`, data);
 
     return {
       id: Number(data.id) || 1,
@@ -55,7 +55,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
 export async function getAllBlogSlugs(): Promise<string[]> {
   try {
     if (!fs.existsSync(contentDirectory)) {
-      console.log("Content directory not found");
+      // console.log("Content directory not found");
       return [];
     }
 
@@ -63,13 +63,13 @@ export async function getAllBlogSlugs(): Promise<string[]> {
     const mdFiles = files.filter((file) => file.endsWith(".md"));
 
     if (mdFiles.length === 0) {
-      console.log("No markdown files found");
+      // console.log("No markdown files found");
       return [];
     }
 
     const slugs = mdFiles.map((file) => {
       const slug = file.replace(/\.md$/, "");
-      console.log(`Found markdown file: ${slug}`);
+      // console.log(`Found markdown file: ${slug}`);
       return slug;
     });
 
@@ -85,7 +85,7 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
     const slugs = await getAllBlogSlugs();
 
     if (slugs.length === 0) {
-      console.log("No blog posts found");
+      // console.log("No blog posts found");
       return [];
     }
 
